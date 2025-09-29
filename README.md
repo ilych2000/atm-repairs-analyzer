@@ -71,42 +71,42 @@ src/
 
 ## Установка и запуск
 
-## Клонирование репозитория
+### Клонирование репозитория
 ```bash
 git clone <repository-url>
 cd atm-incidents-analyzer
 ```
-###Сборка проекта
+### Сборка проекта
 ```bash
 mvn clean package
 ```
-###Запуск приложения из Maven
+### Запуск приложения из Maven
 ```bash
 mvn spring-boot:run
 ```
-###Запуск приложения jar
+### Запуск приложения jar
 ```bash
 java -jar atm-repairs-analyzer-0.0.1-SNAPSHOT.jar
 ```
 
-###Доступ к приложению
+### Доступ к приложению
 ```bash
 Откройте в браузере: http://localhost:8080
 ```
 
-##Конфигурация
-###Настройки в application.properties:
-# Количество записей для аналитики
+## Конфигурация
+### Настройки в application.properties:
+#### Количество записей для аналитики
 ```bash
 atm-repairs-analizer.count-top-most-common-causes=3
 atm-repairs-analizer.count-longest-repair-times=3
 atm-repairs-analizer.count-cause-failure-recurred=15
 ```
-# Порт сервера
+#### Порт сервера
 ```bash
 server.port=8080
 ```
-###Настройки базы данных в application.yml:
+### Настройки базы данных в application.yml:
 ```yaml
 spring:
   datasource:
