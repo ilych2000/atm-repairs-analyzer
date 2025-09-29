@@ -33,8 +33,7 @@ src/
 │ │ ├── service/ # Бизнес-логика
 │ │ └── mapper/ # MapStruct мапперы
 │ ├── resources/
-│ │ ├── static/ # Статические ресурсы (CSS, JS)
-│ │ └── templates/ # HTML шаблоны
+│ │ └── static/ # Статические ресурсы (CSS, JS)
 │ └── application.properties # Конфигурация
 ```
 
@@ -73,7 +72,7 @@ src/
 
 ### Клонирование репозитория
 ```bash
-git clone <repository-url>
+git clone https://github.com/ilych2000/atm-repairs-analyzer.git
 cd atm-incidents-analyzer
 ```
 ### Сборка проекта
@@ -88,6 +87,10 @@ mvn spring-boot:run
 ```bash
 java -jar atm-repairs-analyzer-0.0.1-SNAPSHOT.jar
 ```
+### Запуск приложения jar на определенном порту
+```bash
+java -jar atm-repairs-analyzer-0.0.1-SNAPSHOT.jar -Dserver.port=9090
+```
 
 ### Доступ к приложению
 ```bash
@@ -98,8 +101,13 @@ java -jar atm-repairs-analyzer-0.0.1-SNAPSHOT.jar
 ### Настройки в application.properties:
 #### Количество записей для аналитики
 ```bash
+# Количество наиболее часто встречающихся причин неисправности
 atm-repairs-analizer.count-top-most-common-causes=3
+
+# Количество наиболее долгих ремонта
 atm-repairs-analizer.count-longest-repair-times=3
+
+# Количество дней за которые причина поломки повторилась
 atm-repairs-analizer.count-cause-failure-recurred=15
 ```
 #### Порт сервера
