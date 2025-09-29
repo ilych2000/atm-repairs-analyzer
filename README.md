@@ -18,7 +18,7 @@
 ### Технические особенности:
 - **Backend**: Spring Boot приложение с REST API
 - **Frontend**: Vue.js с адаптивным дизайном
-- **База данных**: SQLite с Hibernate
+- **База данных**: SQLite с JPA и Hibernate
 - **Файловая обработка**: Apache POI для работы с Excel
 
 ## Структура проекта
