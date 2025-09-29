@@ -60,13 +60,13 @@ src/
 - Современный браузер с поддержкой ES6+
 
 ### Зависимости:
-- Spring Boot 3.x
-- SQLite
-- Hibernate
-- Apache POI
-- MapStruct
-- Lombok
-- Vue.js 3
+- Spring Boot 3.5.5
+- SQLite 3.49.1.0
+- Hibernate 6.6.26
+- Apache POI 5.4.1
+- MapStruct 1.6.3
+- Lombok 1.18.38
+- Vue.js 3.5.21
 
 ## Установка и запуск
 
