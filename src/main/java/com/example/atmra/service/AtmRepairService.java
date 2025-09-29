@@ -31,7 +31,7 @@ import lombok.Setter;
 @RequiredArgsConstructor
 public class AtmRepairService {
 
-    /** Количество наиболее часто встречающиеся причины неисправности */
+    /** Количество наиболее часто встречающихся причин неисправности */
     @Getter
     @Setter(onMethod_ = {@Value("${atm-repairs-analizer.count-top-most-common-causes}")})
     private int countTopMostCommonCauses;
@@ -199,3 +199,4 @@ public class AtmRepairService {
     }
 
 }
+
