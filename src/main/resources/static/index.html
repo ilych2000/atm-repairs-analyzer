@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ремонт АТМ. Анализ причины и сроков ремонта</title>
+<script src="js/vue.global.js"></script>
+<script src="config.js"></script>
+<script src="js/app.js"></script>
+<link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+<body>
+	<div id="app">
+		<div class="container">
+			<header>
+				<h1>Ремонт АТМ</h1>
+				<p class="description">Анализ причины и сроков ремонта</p>
+			</header>
+
+			<!-- Скрытый input для выбора файла -->
+			<input type="file" id="fileInput" accept=".xls,.xlsx" class="hidden" />
+
+			<div class="controls" v-if="model.pageType=='loading'">
+				<button onClick="document.getElementById('fileInput').click();" 
+				    class="btn btn-primary"	:disabled="model.isLoading">Загрузить файл</button>
+				<button class="btn btn-success" @click="switchPageType()"
+					:disabled="model.isLoading">Отобразить данные</button>
+				<button @click="deleteAllData()" class="btn btn-danger"
+					:disabled="model.isLoading">Удалить данные</button>
+			</div>
+
+			<div class="controls" v-if="model.pageType=='analize'">
+				<button @click="switchPageType()" class="btn"
+					:disabled="model.isLoading">Загрузка данных</button>
+				<button v-for="btn in analizeButtons"
+					@click="switchAnalizeType(btn.name)" v-bind:id="btn.name"
+					class="btn" :disabled="model.isLoading">{{ btn.buttonText
+					}}</button>
+			</div>
+			<div v-if="model.errorMessage" class="status error">
+				<strong>Ошибка:</strong> {{ model.errorMessage }}
+			</div>
+			<div v-if="model.successMessage" class="status success">{{
+				model.successMessage }}</div>
+			<div v-if="model.isLoading" class="status loading">Загрузка
+				данных...</div>
+			<div class="content"
+				v-if="model.pageType=='analize' && !model.errorMessage && model.analizeData">
+				<div class="table-container">
+					<h2 class="table-title">{{ model.analizeTitle }}</h2>
+					<div class="filters">
+						<input v-model="model.filterText" placeholder="Поиск..."
+							class="search-input" /> <span class="table-info"
+							v-if="model.analizeData"> Показано: {{
+							filteredAnalizeData.length }} из {{ model.analizeData.length }} </span>
+					</div>
+					<table>
+						<thead>
+							<tr>
+								<th>ATM ID</th>
+								<th v-if="!model.hasGroup">Причина</th>
+								<th>Начало</th>
+								<th>Окончание</th>
+								<th>Серийный номер</th>
+								<th>BANK NM</th>
+								<th>Канал связи</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr @click="model.analizeType=='allData' && editData(row)"
+								:class="{edited : model.analizeType=='allData'}"
+								v-for="row in filteredAnalizeData" :key="row.caseId">
+								<template v-if="row.groupTitle">
+									<td colspan="8" class="group-title">{{ row.groupTitle }}</td>
+								</template>
+								<template v-else>
+									<td>{{ row.atmId }}</td>
+									<td v-if="!model.hasGroup">{{ row.reason }}</td>
+									<td class="nowrap">{{ formatDate(row.startTime) }}</td>
+									<td class="nowrap">{{ formatDate(row.endTime) }}</td>
+									<td>{{ row.serialNumber }}</td>
+									<td>{{ row.bankName }}</td>
+									<td>{{ row.channel }}</td>
+								</template>
+							</tr>
+							<tr v-if="filteredAnalizeData.length === 0">
+								<td colspan="8" class="no-data">Нет данных для отображения</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="table-container" v-if="model.isEditMode">
+					<div class="modal-overlay" id="modalOverlay">
+						<div class="modal">
+							<h2 class="editor-title">{{ model.editTitle }}</h2>
+							<form @submit.prevent="submitForm" class="form-editor">
+								<div class="form-row">
+									<div class="form-group">
+										<label for="atmId"> ATM ID</label> <input type="text"
+											id="atmId" v-model="model.editRow.atmId" required>
+									</div>
+
+									<div class="form-group">
+										<label for="serialNumber">Серийный номер</label> <input
+											type="text" id="serialNumber"
+											v-model="model.editRow.serialNumber" required>
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="reason"> Причина неисправности</label> <input
+										type="text" id="reason" v-model="model.editRow.reason"
+										list="listReason" required>
+									<datalist id="listReason">
+										<option>УС не выходит на связь с хостом</option>
+										<option>Банкомат закрыт (Up Closed)</option>
+										<option>Отсутствует первичный канал связи</option>
+										<option>CashIn - Ошибка</option>
+										<option>Отсутствует резервный канал связи</option>
+										<option>Фатальная ошибка устройства выдачи</option>
+										<option>В режиме сервисного обслуживания(Supervisor)</option>
+										<option>Transactions WDP Fatal</option>
+										<option>Чековый принтер - мало бумаги</option>
+										<option>Картридер - фатальная ошибка</option>
+										<option>CashIn - Ошибка депозитария</option>
+										<option>Фатальная ошибка чекового принтера</option>
+										<option>DOWN without state (нормализация
+											работоспособности узла)</option>
+										<option>Symantec offline, Prevention включена</option>
+										<option>Ошибка GBRU</option>
+										<option>Мало чековой бумаги</option>
+										<option>Подозрение на возможное отсутствие доступных
+											денежных средств</option>
+									</datalist>
+								</div>
+
+								<div class="form-row">
+									<div class="form-group">
+										<label for="startTime"> Время начала</label> <input
+											type="datetime-local" id="startTime"
+											v-model="model.editRow.startTime" required>
+									</div>
+
+									<div class="form-group">
+										<label for="endTime"> Время окончания</label> <input
+											type="datetime-local" id="endTime"
+											v-model="model.editRow.endTime" required>
+									</div>
+								</div>
+
+								<div class="form-row">
+									<div class="form-group">
+										<label for="bankName">Название банка</label> <input
+											type="text" id="bankName" v-model="model.editRow.bankName"
+											list="listBankName" required>
+										<datalist id="listBankName">
+											<option>Банк ВТБ24</option>
+										</datalist>
+									</div>
+									<div class="form-group">
+										<label for="channel">Канал</label> <input type="text"
+											id="channel" v-model="model.editRow.channel"
+											list="listChannel" required>
+										<datalist id="listChannel">
+											<option>Банк</option>
+										</datalist>
+									</div>
+								</div>
+								<div class="btn-group">
+									<button type="submit" class="btn">Сохранить</button>
+									<button type="button" class="btn" @click="resetForm">
+										Сбросить</button>
+									<button type="button" class="btn" @click="closeForm">
+										Отмена</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
