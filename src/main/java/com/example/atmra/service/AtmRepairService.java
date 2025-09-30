@@ -179,7 +179,7 @@ public class AtmRepairService {
                 for (int i = 1; i < list.size(); i++) {
                     var next = list.get(i);
                     if (ChronoUnit.DAYS.between(pred.getStartTime(),
-                            next.getStartTime()) >= countCauseFailureRecurred) {
+                            next.getStartTime()) <= countCauseFailureRecurred) {
                         if (atm.isEmpty() || atm.getLast() != pred) {
                             atm.add(pred);
                         }
@@ -199,4 +199,5 @@ public class AtmRepairService {
     }
 
 }
+
 
