@@ -109,6 +109,11 @@ atm-repairs-analizer.count-longest-repair-times=3
 
 # Количество дней за которые причина поломки повторилась
 atm-repairs-analizer.count-cause-failure-recurred=15
+
+# Тип сервиса  работы с таблицей ремонтов. Возможные значения:
+# code - Обработка данных в коде
+# cb - Обработка данных посредством Сriteria API
+atm-service.type = cb
 ```
 #### Порт сервера
 ```bash
