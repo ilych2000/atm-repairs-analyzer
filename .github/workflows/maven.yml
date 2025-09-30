@@ -40,8 +40,4 @@ jobs:
       with:
         name: spring-boot-app
         path: target/*.jar
-        retention-days: 7
-        upload_url: ${{ github.event.release.upload_url }}
-        asset_path: ./target/myapp.jar
-        asset_name: my-spring-boot-app.jar
-        
+        retention-days: 7    
