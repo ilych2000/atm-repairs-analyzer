@@ -1,0 +1,41 @@
+{"properties": [
+{
+  "name": "atm-repairs-analizer.count-top-most-common-causes",
+  "type": "java.lang.Integer",
+  "defaultValue": 3,
+  "description": "Количество наиболее часто встречающихся причин неисправности"
+},
+{
+  "name": "atm-repairs-analizer.count-top-longest-repair-times",
+  "type": "java.lang.Integer",
+  "defaultValue": 3,
+  "description": "Количество наиболее долгих ремонта'"
+},
+{
+  "name": "atm-repairs-analizer.count-cause-failure-recurred",
+  "type": "java.lang.Integer",
+  "defaultValue": 15,
+  "description": "Количество дней за которые причина поломки повторилась"
+},
+{
+  "name": "atm-service.type",
+  "type": "java.lang.String",
+  "defaultValue": "java",
+  "description": "Тип сервиса  работы с таблицей ремонтов"
+}
+],
+"hints": [
+    {
+      "name": "atm-service.type",
+      "values": [
+        {
+          "value": "code",
+          "description": "Обработка данных в коде"
+        },
+        {
+          "value": "cb",
+          "description": "Обработка данных посредством Сriteria API"
+        }
+      ]
+    }
+]}

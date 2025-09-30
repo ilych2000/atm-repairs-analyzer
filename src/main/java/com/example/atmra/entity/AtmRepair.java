@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,7 +17,10 @@ import lombok.NoArgsConstructor;
  * Сущность данных ремонта.
  */
 @Entity
-@Table(name = "repairs")
+@Table(name = "repairs", indexes = {
+        @Index(name = "idx_atmId_reason", columnList = "atmId, reason"),
+        @Index(name = "idx_reason", columnList = "reason")
+})
 @Data
 @Builder
 @NoArgsConstructor

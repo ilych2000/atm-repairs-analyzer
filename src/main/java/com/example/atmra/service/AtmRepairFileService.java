@@ -20,7 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AtmRepairFileService {
 
-    private final AtmRepairService service;
+    private final IAtmRepairService service;
 
     /**
      * Сохраняет данные о ремонтах из XLS файла и возвращает количество загруженных записей.

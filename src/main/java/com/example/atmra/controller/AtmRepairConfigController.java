@@ -3,8 +3,7 @@ package com.example.atmra.controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.atmra.service.AtmRepairService;
-
+import com.example.atmra.service.AtmRepairConfiguration;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -14,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AtmRepairConfigController {
 
-    private final AtmRepairService atmRepairService;
+    private final AtmRepairConfiguration atmRepairConfiguration;
 
     /**
      * Возвращает скрипт с конфигурацией.
@@ -30,9 +29,9 @@ public class AtmRepairConfigController {
                     countCauseFailureRecurred : %d,
                 }
                 """.formatted(
-                atmRepairService.getCountTopMostCommonCauses(),
-                atmRepairService.getCountTopLongestRepairTimes(),
-                atmRepairService.getCountCauseFailureRecurred());
+                atmRepairConfiguration.getCountTopMostCommonCauses(),
+                atmRepairConfiguration.getCountTopLongestRepairTimes(),
+                atmRepairConfiguration.getCountCauseFailureRecurred());
     }
 
 }

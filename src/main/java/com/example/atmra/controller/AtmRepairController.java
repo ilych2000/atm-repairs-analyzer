@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.atmra.dto.AtmRepairDto;
-import com.example.atmra.service.AtmRepairService;
+import com.example.atmra.service.IAtmRepairService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AtmRepairController {
 
-    private final AtmRepairService atmRepairService;
+    private final IAtmRepairService atmRepairService;
 
     /**
      * Обновляет запись в таблице ремонтов.
