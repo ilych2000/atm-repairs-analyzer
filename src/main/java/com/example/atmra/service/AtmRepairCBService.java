@@ -41,20 +41,20 @@ public class AtmRepairCBService extends AbstractAtmRepairService {
         query.groupBy(root.get("reason"));
         query.orderBy(cb.desc(cb.count(root)));
 
-        List<Object[]> results = entityManager.createQuery(query)
+        var reasonCounts = entityManager.createQuery(query)
                 .setMaxResults(atmRepairConfiguration.getCountTopMostCommonCauses())
                 .getResultList();
 
         List<Object> result = new ArrayList<>();
-        for (Object[] row : results) {
-            String reason = (String) row[0];
-            Long count = (Long) row[1];
+        for (Object[] row : reasonCounts) {
+            var reason = (String) row[0];
+            var count = (Long) row[1];
 
             result.add(AtmRepairGroupDto.builder()
                     .groupTitle("%s (Всего: %s)".formatted(reason, count))
                     .build());
 
-            List<AtmRepair> repairs = atmRepairRepository.findRepairsByReason(reason);
+            var repairs = atmRepairRepository.findRepairsByReason(reason);
             result.addAll(atmRepairMapper.toDtoList(repairs));
         }
         return result;
@@ -73,7 +73,7 @@ public class AtmRepairCBService extends AbstractAtmRepairService {
         query.select(root);
         query.orderBy(cb.desc(durationInHours));
 
-        List<AtmRepair> longestRepairs = entityManager.createQuery(query)
+        var longestRepairs = entityManager.createQuery(query)
                 .setMaxResults(atmRepairConfiguration.getCountTopLongestRepairTimes())
                 .getResultList();
 
@@ -93,14 +93,14 @@ public class AtmRepairCBService extends AbstractAtmRepairService {
     @Transactional(readOnly = true)
     public List<Object> findCauseFailureRecurred() {
         // Сначала получаем все комбинации ATM+причина, которые повторяются
-        List<Object[]> recurringCombinations = findRecurringAtmReasonCombinations();
+        var recurringCombinations = findRecurringAtmReasonCombinations();
 
         List<Object> result = new ArrayList<>();
         for (Object[] combination : recurringCombinations) {
-            String atmId = (String) combination[0];
-            String reason = (String) combination[1];
+            var atmId = (String) combination[0];
+            var reason = (String) combination[1];
 
-            List<AtmRepair> repairs = findRepairsByAtmAndReasonWithRecurrence(atmId, reason);
+            var repairs = findRepairsByAtmAndReasonWithRecurrence(atmId, reason);
             if (!repairs.isEmpty()) {
                 result.add(AtmRepairGroupDto.builder()
                         .groupTitle("АТМ: %s. %s".formatted(atmId, reason))
@@ -163,13 +163,10 @@ public class AtmRepairCBService extends AbstractAtmRepairService {
         int countCauseFailureRecurred = atmRepairConfiguration.getCountCauseFailureRecurred();
         int size = repairs.size();
         for (int i = 1; i < size; i++) {
-            AtmRepair previous = repairs.get(i - 1);
-            AtmRepair current = repairs.get(i);
-            long daysBetween = ChronoUnit.DAYS.between(
-                    previous.getStartTime(),
-                    current.getStartTime());
-
-            if (daysBetween <= countCauseFailureRecurred) {
+            var previous = repairs.get(i - 1);
+            var current = repairs.get(i);
+            if (ChronoUnit.DAYS.between(previous.getStartTime(),
+                    current.getStartTime()) <= countCauseFailureRecurred) {
                 if (recurring.isEmpty() || (recurring.getLast() != previous)) {
                     recurring.add(previous);
                 }

@@ -85,29 +85,29 @@ public class AtmRepairService extends AbstractAtmRepairService {
                                 Collectors.mapping(Function.identity(),
                                         Collectors.toList())));
         List<Object> ret = new ArrayList<>();
-        repairsByReason.forEach((key, list) -> {
-            if (list.size() > 1) {
-                List<AtmRepair> atm = new ArrayList<>();
-                list.sort(Comparator.comparing(AtmRepair::getStartTime));
-                var pred = list.get(0);
+        repairsByReason.forEach((reason, reasonRepairs) -> {
+            if (reasonRepairs.size() > 1) {
+                reasonRepairs.sort(Comparator.comparing(AtmRepair::getStartTime));
+                List<AtmRepair> filteredRepairs = new ArrayList<>();
+                var previous = reasonRepairs.get(0);
                 int countCauseFailureRecurred =
                         atmRepairConfiguration.getCountCauseFailureRecurred();
-                for (int i = 1; i < list.size(); i++) {
-                    var next = list.get(i);
-                    if (ChronoUnit.DAYS.between(pred.getStartTime(),
-                            next.getStartTime()) <= countCauseFailureRecurred) {
-                        if (atm.isEmpty() || atm.getLast() != pred) {
-                            atm.add(pred);
+                for (int i = 1; i < reasonRepairs.size(); i++) {
+                    var current = reasonRepairs.get(i);
+                    if (ChronoUnit.DAYS.between(previous.getStartTime(),
+                            current.getStartTime()) <= countCauseFailureRecurred) {
+                        if (filteredRepairs.isEmpty() || filteredRepairs.getLast() != previous) {
+                            filteredRepairs.add(previous);
                         }
-                        atm.add(next);
-                        pred = next;
+                        filteredRepairs.add(current);
+                        previous = current;
                     }
                 }
-                if (!atm.isEmpty()) {
+                if (!filteredRepairs.isEmpty()) {
                     ret.add(AtmRepairGroupDto.builder()
-                            .groupTitle(key)
+                            .groupTitle(reason)
                             .build());
-                    ret.addAll(atmRepairMapper.toDtoList(atm));
+                    ret.addAll(atmRepairMapper.toDtoList(filteredRepairs));
                 }
             }
         });
