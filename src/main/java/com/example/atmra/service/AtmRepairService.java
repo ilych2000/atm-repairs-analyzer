@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.atmra.dto.AtmRepairGroupDto;
 import com.example.atmra.entity.AtmRepair;
-import lombok.RequiredArgsConstructor;
 
 /**
  * Сервис работы с таблицей ремонтов.
@@ -114,4 +113,5 @@ public class AtmRepairService extends AbstractAtmRepairService {
     }
 
 }
+
 
