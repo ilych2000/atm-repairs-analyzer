@@ -23,7 +23,6 @@ import lombok.RequiredArgsConstructor;
  * Сервис работы с таблицей ремонтов.
  */
 @Service
-@RequiredArgsConstructor
 @ConditionalOnProperty(name = "atm-service.type", havingValue = "code")
 public class AtmRepairService extends AbstractAtmRepairService {
 
@@ -115,3 +114,4 @@ public class AtmRepairService extends AbstractAtmRepairService {
     }
 
 }
+
